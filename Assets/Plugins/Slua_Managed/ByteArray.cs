@@ -181,8 +181,9 @@ namespace SLua
 
 		public string ReadString ()
 		{
-			int len = (int)ReadVarInt ();
-			int oldPos = pos_;
+            //int len = (int)ReadVarInt ();
+            ushort len = ReadUInt16();
+            int oldPos = pos_;
 			pos_ += len;
 			return System.Text.UTF8Encoding.UTF8.GetString (data_, oldPos, len);
 		}
@@ -207,7 +208,7 @@ namespace SLua
 			if (v != null) {
 				ReAlloc (ref data_, pos_, v.Position);
 				byte[] arr = v.GetData ();
-				arr.CopyTo (data_, pos_);
+                Array.Copy(arr, 0, data_, pos_, v.Position);
                 pos_ += v.Position;
             }
 		}
@@ -337,7 +338,8 @@ namespace SLua
 		{
 			byte[] bytes = System.Text.Encoding.UTF8.GetBytes (v);
 			int len = bytes.Length;
-			WriteVarInt (bytes.Length);
+            //WriteVarInt (bytes.Length);
+            WriteUShort((ushort)bytes.Length);
 			ReAlloc (ref data_, pos_, len);
 			bytes.CopyTo (data_, pos_);
 			pos_ += len;
@@ -409,6 +411,56 @@ namespace SLua
         {
             Write(Convert.ToUInt32(v & 0x00000000ffffffff));
             Write(Convert.ToInt16(v & 0x0000ffff00000000));
+        }
+
+        public ByteArray ReadByteArray()
+        {
+            int len = data_.Length - pos_;
+
+            ByteArray ba = new ByteArray();
+            if (len == 0)
+            {
+                return ba;
+            }
+
+            byte[] data = new byte[len];
+            for (int i = 0; i < len; ++i)
+            {
+                data[i] = data_[pos_++];
+            }
+
+            ba.SetData(data);
+
+            return ba;
+        }
+
+        public UInt64 ReadUInt64()
+        {
+            int oldPos = pos_;
+            pos_ += 8;
+            return BitConverter.ToUInt64(data_, oldPos);
+        }
+
+        public byte[] ReadBytes()
+        {
+            ushort len = ReadUInt16();
+            int oldPos = pos_;
+            pos_ += len;
+            byte[] bytes = new byte[len];
+            for (int i = 0; i < len; ++i)
+            {
+                bytes[i] = data_[oldPos + i];
+            }
+            return bytes;
+        }
+
+        public void WriteBytes(byte[] v)
+        {
+            ushort len = (ushort)(v.Length);
+            Write(len);
+            ReAlloc(ref data_, pos_, len);
+            v.CopyTo(data_, pos_);
+            pos_ += len;
         }
     }
 }
