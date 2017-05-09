@@ -202,7 +202,7 @@ namespace SLua
 		{
 			Write (v);
 		}
-
+		
 		public void Write (ByteArray v)
 		{
 			if (v != null) {
@@ -212,19 +212,19 @@ namespace SLua
                 pos_ += v.Position;
             }
 		}
-
+		
 		public void Write (bool v)
 		{
 			Write (Convert.ToByte (v));
 		}
-
+		
 		public void Write (int v)
 		{
 			ReAlloc (ref data_, pos_, 4);
 			BitConverter.GetBytes (v).CopyTo (data_, pos_);
 			pos_ += 4;
 		}
-
+		
 		public void Write (uint v)
 		{
 			ReAlloc (ref data_, pos_, 4);
@@ -236,19 +236,19 @@ namespace SLua
 		{
 			Write (v);
 		}
-
+		
 		public void Write (char v)
 		{
 			ReAlloc (ref data_, pos_, 1);
 			data_ [pos_] = (byte)v;
 			pos_++;
 		}
-
+		
 		public void WriteChar (sbyte v)
 		{
 			WriteSByte (v);
 		}
-
+		
 		public void Write (byte[] arr)
 		{
 			ReAlloc (ref data_, pos_, arr.Length);
@@ -256,36 +256,36 @@ namespace SLua
 				data_ [pos_++] = v;
 			}
 		}
-
+		
 		public void Write (byte v)
 		{
 			ReAlloc (ref data_, pos_, 1);
 			data_ [pos_] = v;
 			pos_++;
 		}
-
+		
 		public void WriteByte (byte v)
 		{
 			Write (v);
 		}
-
+		
 		public void WriteUChar (byte v)
 		{
 			Write (v);
 		}
-
+		
 		public void Write (sbyte v)
 		{
 			ReAlloc (ref data_, pos_, 1);
 			BitConverter.GetBytes (v).CopyTo (data_, pos_);
 			pos_++;
 		}
-
+		
 		public void WriteSByte (sbyte v)
 		{
 			Write (v);
 		}
-
+		
 		public void Write (short v)
 		{
 			ReAlloc (ref data_, pos_, 2);
@@ -295,6 +295,7 @@ namespace SLua
 			pos_++;
 		}
 
+		
 		public void Write (ushort v)
 		{
 			Write ((short)v);
