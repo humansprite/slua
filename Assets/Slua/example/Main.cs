@@ -10,6 +10,8 @@ public class Main : MonoBehaviour
 	LuaSvr l;
 	public Text logText;
 	int progress=0;
+    DebugInterface ldb;
+
 	// Use this for initialization
 	void Start()
 	{
@@ -36,7 +38,11 @@ public class Main : MonoBehaviour
 
 	void complete()
 	{
-		l.start("main");
+        //初始化调试器
+        ldb = new DebugInterface(l.luaState);
+        ldb.init();
+
+        l.start("main");
 		object o = l.luaState.getFunction("foo").call(1, 2, 3);
 		object[] array = (object[])o;
 		for (int n = 0; n < array.Length; n++)
@@ -46,10 +52,25 @@ public class Main : MonoBehaviour
 		Debug.Log(s);
 	}
 
+    void Update()
+    {
+        if (ldb != null)
+        {
+            ldb.update();
+        }
+    }
+
 	void OnGUI()
 	{
 		if(progress!=100)
 			GUI.Label(new Rect(0, 0, 100, 50), string.Format("Loading {0}%", progress));
 	}
 
+    void OnDestroy()
+    {
+        if (ldb != null)
+        {
+            ldb.close();
+        }
+    }
 }
