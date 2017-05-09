@@ -385,7 +385,20 @@ namespace SLua
 			return l;
 		}
 
-		public class Enumerator : IEnumerator<TablePair>, IDisposable
+        public bool IsEmpty
+        {
+            get
+            {
+                int top = LuaDLL.lua_gettop(L);
+                LuaDLL.lua_getref(L, this.Ref);
+                LuaDLL.lua_pushnil(L);
+                bool ret = LuaDLL.lua_next(L, -2) > 0;
+                LuaDLL.lua_settop(L, top);
+                return !ret;
+            }
+        }
+
+        public class Enumerator : IEnumerator<TablePair>, IDisposable
 		{
 			LuaTable t;
 			int indext = -1;
@@ -411,6 +424,7 @@ namespace SLua
 				else
 					LuaDLL.lua_pop(t.L, 1);
 
+                var ty = LuaDLL.lua_type(t.L, -1);
 				bool ret = LuaDLL.lua_next(t.L, indext) > 0;
 				if (!ret) iterPhase = 2;
 
@@ -459,14 +473,13 @@ namespace SLua
 		{
 			return GetEnumerator();
 		}
-
-	}
-
+    }
 
 
 
 
-	public class LuaState : IDisposable
+
+    public class LuaState : IDisposable
 	{
 		IntPtr l_;
 		int mainThread = 0;
@@ -505,7 +518,9 @@ namespace SLua
 			}
 		}
 
-		public delegate byte[] LoaderDelegate(string fn);
+        public int Top{ get{ return LuaDLL.lua_gettop(L); } }
+
+        public delegate byte[] LoaderDelegate(string fn);
 		public delegate void OutputDelegate(string msg);
 
 		static public LoaderDelegate loaderDelegate;
@@ -1040,19 +1055,20 @@ end
 
 		internal object getObject(int reference, int index)
 		{
-			if (index >= 1) {
-				LuaDLL.lua_getref (L, reference);
+            if (index >= 1)
+            {
+                LuaDLL.lua_getref (L, reference);
 				LuaDLL.lua_rawgeti (L, -1, index);
 				object returnValue = getObject (L, -1);
-				LuaDLL.lua_pop (L, 2);
-				return returnValue;
+                LuaDLL.lua_pop(L, 2);
+                return returnValue;
 			} else {
 				LuaDLL.lua_getref (L, reference);
 				LuaDLL.lua_pushinteger (L, index);
 				LuaDLL.lua_gettable (L, -2);
 				object returnValue = getObject (L, -1);
-				LuaDLL.lua_pop (L, 2);
-				return returnValue;
+                LuaDLL.lua_pop(L, 2);
+                return returnValue;
 			}
 		}
 

@@ -291,20 +291,26 @@ return Class
 		[MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
 		static public int As(IntPtr l)
 		{
-			try
-			{
-				if (!isTypeTable(l, 2))
-				{
-					return error(l, "No matched type of param 2");
-				}
-				string meta = LuaDLL.lua_tostring(l, -1);
-				LuaDLL.luaL_getmetatable(l, meta);
-				LuaDLL.lua_setmetatable(l, 1);
-				pushValue(l, true);
-				LuaDLL.lua_pushvalue(l, 1);
-				return 2;
-			}
-			catch (Exception e)
+            try
+            {
+                object o;
+                checkType(l, 1, out o);
+                Type t;
+                checkType(l, 2, out t);
+
+                try
+                {
+                    o = Convert.ChangeType(o, t);
+                }
+                catch
+                {
+                    o = null;
+                }
+                pushValue(l, o);
+
+                return ok(l, 1);
+            }
+            catch (Exception e)
 			{
 				return error(l, e);
 			}

@@ -174,10 +174,11 @@ namespace SLua
 			if (UnityEditor.EditorApplication.isPlaying)
 			#endif
 				LuaCoroutine.reg(L, lgo);
-			#endif
-			Lua_SLua_ByteArray.reg (L);
-			Helper.reg(L);
+#endif
+            Lua_SLua_ByteArray.reg(L);
+            Helper.reg(L);
 			LuaValueType.reg(L);
+            SLuaDebug.reg(L);
 
 			if((flag&LuaSvrFlag.LSF_EXTLIB)!=0)
 				LuaDLL.luaS_openextlibs(L);
