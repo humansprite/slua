@@ -112,8 +112,8 @@ watch local/up value  			watch
                 string str;
                 LuaObject.checkType(l, 1, out str);
                 instance.echo(str);
-                if(LuaState.logDelegate!=null)
-                    LuaState.logDelegate(str);
+                //if(LuaState.logDelegate!=null)
+                    //LuaState.logDelegate(str);
                 pushValue(l, true);
                 return 1;
             }
@@ -223,8 +223,8 @@ watch local/up value  			watch
                 Logger.Log("Opened lua debugger interface at " + localEP.ToString());
 
                 // redirect output to client socket
-                var luaFunc = state.getFunction("Slua.ldb.setOutput");
-                luaFunc.call((LuaCSFunction)output);
+                //var luaFunc = state.getFunction("Slua.ldb.setOutput");
+                //luaFunc.call((LuaCSFunction)output);
 
                 IPEndPoint ep = new IPEndPoint(IPAddress.Any, 10241);
                 replyClient = new UdpClient(ep);

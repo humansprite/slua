@@ -39,13 +39,8 @@ do
 
 	local baseStack = 7
 
-    local function print(str)
-    	outputConsole(str)
-    end
-
-    local function error(str)
-    	outputConsole(str)
-    end
+    local print = print
+    local error = error
 
 	local function closeDebug()
 		debug.sethook(nil)
@@ -496,11 +491,6 @@ do
 			return ok,err
 		end
 	end
-
-	function Slua.ldb.setOutput(output)
-		print=output
-		error=output
-	end	
 end
 ";
 
