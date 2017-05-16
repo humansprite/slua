@@ -674,17 +674,6 @@ end
 			LuaDLL.lua_rawseti(L, loaderTable, 2);
 			LuaDLL.lua_settop(L, 0);
 
-//            string InitValueType =
-//@"
-//_G['UnityEngine.Vector2.Instance'] = {}
-//_G['UnityEngine.Vector3.Instance'] = {}
-//_G['UnityEngine.Vector4.Instance'] = {}
-//_G['UnityEngine.Color.Instance'] = {}
-//_G['UnityEngine.Quaternion.Instance'] = {}
-//";
-//            LuaState.get(L).doString(InitValueType);
-
-            return 0;
 		}
 
 		public void Close()
