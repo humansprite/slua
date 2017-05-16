@@ -673,7 +673,7 @@ end
 			LuaDLL.lua_pushvalue(L, loaderFunc);
 			LuaDLL.lua_rawseti(L, loaderTable, 2);
 			LuaDLL.lua_settop(L, 0);
-
+            return 0;
 		}
 
 		public void Close()
