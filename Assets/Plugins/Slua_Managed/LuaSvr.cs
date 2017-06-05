@@ -265,9 +265,10 @@ namespace SLua
 			if (main != null)
 			{
 				luaState.doFile(main);
-				LuaFunction func = (LuaFunction)luaState["main"];
-				if(func!=null)
-					return func.call();
+				using(LuaFunction func = (LuaFunction)luaState["main"]) {
+					if (func != null) 
+						return func.call ();
+				}
 			}
 			return null;
 		}

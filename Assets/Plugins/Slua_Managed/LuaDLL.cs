@@ -533,12 +533,19 @@ namespace SLua
             int strlen;
 
             IntPtr str = luaS_tolstring32(luaState, index, out strlen); // fix il2cpp 64 bit
-
-            if (str != IntPtr.Zero)
+            string s = null;
+            if (strlen > 0 && str != IntPtr.Zero)
             {
-                return Marshal.PtrToStringAnsi(str, strlen);
+                s = Marshal.PtrToStringAnsi(str);
+                // fallback method
+                if(s == null)
+                {
+                    byte[] b = new byte[strlen];
+                    Marshal.Copy(str, b, 0, strlen);
+                    s = System.Text.Encoding.Default.GetString(b);
+                }
             }
-            return null;
+            return (s == null) ? string.Empty : s;
         }
 
 		public static byte[] lua_tobytes(IntPtr luaState, int index)
